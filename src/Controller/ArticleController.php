@@ -3,12 +3,14 @@
 namespace App\Controller;
 
 use App\Service\MarkdownHelper;
+use App\Service\SlackClient;
+use Nexy\Slack\Client;
 use Psr\Log\LoggerInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
-use Symfony\Component\HttpFoundation\Response;
-use Twig\Environment;
+// use Symfony\Component\HttpFoundation\Response;
+// use Twig\Environment;
 
 class ArticleController extends AbstractController
 {
@@ -16,7 +18,7 @@ class ArticleController extends AbstractController
      * Currently unused: just showing a controller with a constructor!
      */
     private $isDebug;
-    public function __construct(bool $isDebug)
+    public function __construct(bool $isDebug, Client $slack)
     {
         $this->isDebug = $isDebug;
     }
@@ -30,8 +32,12 @@ class ArticleController extends AbstractController
     /**
      * @Route("/news/{slug}", name="article_show")
      */
-    public function show($slug, MarkdownHelper $markdownHelper)
+    public function show($slug, MarkdownHelper $markdownHelper, SlackClient $slack)
     {
+        if ($slug === 'khaaaaaan') {
+            $slack->sendMessage('Kahn', 'Ah, Kirk, my old friend...');
+        }
+
         $comments = [
             'I ate a normal rock once. It did NOT taste like bacon!',
             'Woohoo! I\'m going on an all-asteroid diet!',
